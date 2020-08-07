@@ -1,0 +1,51 @@
+version: '3.1'
+services:
+
+  app:
+    container_name: rest-app
+    build:
+      dockerfile: Dockerfile
+      context: .
+    image: rest-app
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: demopw
+      POSTGRES_USER: usr1
+      POSTGRES_DB: mydb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  keycloak:
+    image: jboss/keycloak:11.0.0
+    hostname: keycloak
+    container_name: keycloak
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: mydb
+      DB_USER: usr1
+      # DB_SCHEMA: keycloak
+      DB_PASSWORD: demopw
+      KEYCLOAK_USER: keycloak_usr
+      KEYCLOAK_PASSWORD: password
+      # PROXY_ADDRESS_FORWARDING: true
+      # JDBC_PARAMS: useSSL=false
+    ports:
+      - 8081:8080
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+
+volumes:
+  postgres_data:
+    driver: local
