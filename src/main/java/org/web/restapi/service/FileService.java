@@ -1,5 +1,8 @@
 package org.web.restapi.service;
 
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.errors.*;
 import org.apache.tomcat.util.http.fileupload.impl.FileUploadIOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,8 @@ import org.web.restapi.specification.FileSpecifications;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,18 +32,43 @@ public class FileService {
     @Autowired
     FileMetaDataRepository fileMetaDataRepository;
 
+    @Autowired
+    MinioClient minioClient
+
 
     public List<File> getFiles(){
         return fileRepository.findAll();
     }
 
-    public File addFile(@RequestBody MultipartFile file) throws UploadException {
+    public File addFile(@RequestBody MultipartFile file) throws IOException {
+
+        InputStream inputStream = null;
 
         try {
-            InputStream inputStream = file.getInputStream();
-        } catch (IOException ex) {
-           throw new UploadException(ex.getMessage());
+
+            inputStream = file.getInputStream();
+            minioClient.putObject(PutObjectArgs.builder()
+                    .bucket("test-bucket")
+                    .object(file.getName())
+                    .stream(inputStream, file.getSize(), -1)
+                    .contentType(file.getContentType())
+                    .build());
+
+        } catch (InvalidKeyException
+                | NoSuchAlgorithmException
+                | ErrorResponseException
+                | InvalidResponseException
+                | ServerException
+                | InvalidBucketNameException
+                | XmlParserException
+                | InternalException
+                | InsufficientDataException e) {
+            e.printStackTrace();
+        } finally {
+            assert inputStream != null;
+            inputStream.close();
         }
+
 
         File _file = new File();
 
