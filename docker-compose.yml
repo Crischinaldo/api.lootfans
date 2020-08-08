@@ -45,6 +45,16 @@ services:
     depends_on:
       - postgres
 
+    minio:
+      image: minio/minio
+      volumes:
+        - ./minio/file-storage:/data
+      ports:
+        - "9000:9000"
+      environment:
+        MINIO_ACCESS_KEY: minio_access
+        MINIO_SECRET_KEY: minio_secret
+      command: server /data
 
 volumes:
   postgres_data:
