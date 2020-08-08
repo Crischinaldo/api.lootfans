@@ -1,26 +1,23 @@
-package org.web.restapi.service;
+package de.lootfans.restapi.service;
 
+import de.lootfans.restapi.model.FileMetaData;
+import de.lootfans.restapi.repository.FileMetaDataRepository;
+import de.lootfans.restapi.repository.FileRepository;
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.errors.*;
-import org.apache.tomcat.util.http.fileupload.impl.FileUploadIOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.web.restapi.exception.UploadException;
-import org.web.restapi.model.File;
-import org.web.restapi.model.FileMetaData;
-import org.web.restapi.repository.FileMetaDataRepository;
-import org.web.restapi.repository.FileRepository;
-import org.web.restapi.specification.FileSpecifications;
+import de.lootfans.restapi.model.File;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -33,7 +30,7 @@ public class FileService {
     FileMetaDataRepository fileMetaDataRepository;
 
     @Autowired
-    MinioClient minioClient
+    MinioClient minioClient;
 
 
     public List<File> getFiles(){
@@ -44,12 +41,21 @@ public class FileService {
 
         InputStream inputStream = null;
 
+        // https://docs.min.io/docs/java-client-api-reference.html
+
         try {
+            boolean bucketExists = minioClient.bucketExists(BucketExistsArgs.builder().bucket("test-bucket").build());
+            if (!bucketExists) {
+                minioClient.makeBucket(
+                        MakeBucketArgs.builder()
+                                .bucket("test-bucket")
+                                .build());
+            }
 
             inputStream = file.getInputStream();
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket("test-bucket")
-                    .object(file.getName())
+                    .object(file.getOriginalFilename())
                     .stream(inputStream, file.getSize(), -1)
                     .contentType(file.getContentType())
                     .build());
@@ -62,7 +68,8 @@ public class FileService {
                 | InvalidBucketNameException
                 | XmlParserException
                 | InternalException
-                | InsufficientDataException e) {
+                | InsufficientDataException
+                | RegionConflictException e) {
             e.printStackTrace();
         } finally {
             assert inputStream != null;
@@ -72,7 +79,7 @@ public class FileService {
 
         File _file = new File();
 
-        FileMetaData fileMetaData = new FileMetaData(file.getName(), file.getContentType(), file.getSize();
+        FileMetaData fileMetaData = new FileMetaData(file.getOriginalFilename(), file.getContentType(), file.getSize());
 
         _file.setFileMetaData(fileMetaData);
 

@@ -1,4 +1,4 @@
-package org.web.restapi.config;
+package de.lootfans.restapi.config;
 
 import io.minio.MinioClient;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package org.web.restapi.controller;
+package de.lootfans.restapi.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;

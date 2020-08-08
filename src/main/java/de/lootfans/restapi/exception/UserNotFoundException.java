@@ -1,4 +1,4 @@
-package org.web.restapi.exception;
+package de.lootfans.restapi.exception;
 
 public class UserNotFoundException extends RuntimeException {
 

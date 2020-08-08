@@ -1,4 +1,4 @@
-package org.web.restapi.config;
+package de.lootfans.restapi.config;
 
 
 import org.keycloak.adapters.KeycloakConfigResolver;
@@ -61,9 +61,11 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
-        http.authorizeRequests()
-                .antMatchers("/user-auth").hasRole("user") // only user with role user are allowed to access
-                .antMatchers("/admin-auth").hasRole("admin") // only user with role admin are allowed to access
+
+        http.cors().and().csrf().disable()
+                .authorizeRequests()
+                .antMatchers("api/v1/files").hasRole("user") // only user with role user are allowed to access
+                .antMatchers("api/v1/users").hasRole("user") // only user with role user are allowed to access
                 .anyRequest().permitAll();
     }
 }

@@ -1,10 +1,8 @@
-package org.web.restapi.model;
+package de.lootfans.restapi.model;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -27,8 +25,8 @@ public class FileMetaData {
     @Max(value = 10240000, message = "Bytes should not be greater than 10240000")
     private long fileSize;
 
-    @OneToOne(mappedBy = "filemetadata")
-    private FileMetaData fileMetaData;
+    @OneToOne(mappedBy = "fileMetaData")
+    private File file;
 
     public FileMetaData() {}
 
@@ -70,11 +68,11 @@ public class FileMetaData {
         this.fileSize = fileSize;
     }
 
-    public FileMetaData getFileMetaData() {
-        return fileMetaData;
+    public File getFile() {
+        return file;
     }
 
-    public void setFileMetaData(FileMetaData fileMetaData) {
-        this.fileMetaData = fileMetaData;
+    public void setFile(File file) {
+        this.file = file;
     }
 }

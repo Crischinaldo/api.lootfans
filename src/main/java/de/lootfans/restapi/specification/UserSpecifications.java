@@ -1,8 +1,8 @@
-package org.web.restapi.specification;
+package de.lootfans.restapi.specification;
 
 import org.springframework.data.jpa.domain.Specification;
-import org.web.restapi.model.User;
-import org.web.restapi.model.User_;
+import de.lootfans.restapi.model.User;
+import de.lootfans.restapi.model.User_;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

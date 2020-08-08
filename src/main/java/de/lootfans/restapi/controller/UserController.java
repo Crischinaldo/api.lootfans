@@ -1,17 +1,15 @@
-package org.web.restapi.controller;
+package de.lootfans.restapi.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.web.restapi.exception.ApiError;
-import org.web.restapi.exception.UserNotFoundException;
-import org.web.restapi.model.User;
+import de.lootfans.restapi.exception.UserNotFoundException;
+import de.lootfans.restapi.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.web.restapi.service.UserService;
+import de.lootfans.restapi.service.UserService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")

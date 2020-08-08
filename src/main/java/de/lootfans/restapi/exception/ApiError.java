@@ -1,4 +1,4 @@
-package org.web.restapi.exception;
+package de.lootfans.restapi.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.http.HttpStatus;

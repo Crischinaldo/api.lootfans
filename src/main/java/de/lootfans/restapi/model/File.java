@@ -1,10 +1,8 @@
-package org.web.restapi.model;
+package de.lootfans.restapi.model;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity

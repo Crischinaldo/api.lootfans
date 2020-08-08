@@ -1,13 +1,12 @@
-package org.web.restapi.service;
+package de.lootfans.restapi.service;
 
+import de.lootfans.restapi.repository.UserRepository;
+import de.lootfans.restapi.specification.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.web.restapi.exception.UserNotFoundException;
-import org.web.restapi.model.User;
-import org.web.restapi.repository.UserRepository;
-import org.web.restapi.specification.UserSpecifications;
+import de.lootfans.restapi.exception.UserNotFoundException;
+import de.lootfans.restapi.model.User;
 
 import java.util.List;
 

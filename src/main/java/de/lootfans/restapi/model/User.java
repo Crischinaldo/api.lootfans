@@ -1,4 +1,4 @@
-package org.web.restapi.model;
+package de.lootfans.restapi.model;
 
 
 import javax.persistence.Column;
