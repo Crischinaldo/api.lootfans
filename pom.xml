@@ -22,6 +22,7 @@
         <java.version>14.1</java.version>
         <keycloak.version>11.0.0</keycloak.version>
         <hibernate-jpamodelgen.version>5.4.19.Final</hibernate-jpamodelgen.version>
+        <minio.version>7.1.0</minio.version>
     </properties>
 
 
@@ -130,6 +131,14 @@
             <artifactId>keycloak-spring-boot-2-starter</artifactId>
             <version>4.0.0.Final</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.minio/minio -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
+        </dependency>
+
 
     </dependencies>
 
