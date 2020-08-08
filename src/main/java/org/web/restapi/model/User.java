@@ -43,9 +43,6 @@ public class User{
     @Column(name = "birth_date")
     private String birthDate;
 
-    @Column(name = "role")
-    private String role;
-
     @Column(name = "password")
     private String password;
 
@@ -115,14 +112,6 @@ public class User{
         this.birthDate = birthDate;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -156,7 +145,6 @@ public class User{
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 ", birthDate='" + birthDate + '\'' +
-                ", role='" + role + '\'' +
                 ", password='" + password + '\'' +
                 ", status='" + status + '\'' +
                 ", lastUpdate='" + lastUpdate + '\'' +
