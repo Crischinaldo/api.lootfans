@@ -9,7 +9,7 @@ import javax.annotation.security.RolesAllowed;
 
 @RestController
 @RequestMapping("/test")
-public class TestAuthController {
+public class AuthentificationController {
 
     @RequestMapping(value = "/anonymous", method = RequestMethod.GET)
     public ResponseEntity<String> getAnonymous() {
