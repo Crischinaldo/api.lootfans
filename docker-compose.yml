@@ -8,7 +8,7 @@ services:
       context: .
     image: rest-app
     ports:
-      - 8080:8080
+      - 8081:8081
     depends_on:
       - postgres
     networks:
@@ -44,10 +44,11 @@ services:
       # PROXY_ADDRESS_FORWARDING: true
       # JDBC_PARAMS: useSSL=false
     ports:
-      - 8081:8080
+      - 8080:8080
     restart: unless-stopped
     depends_on:
       - postgres
+      - app
     networks:
       - backend
 
