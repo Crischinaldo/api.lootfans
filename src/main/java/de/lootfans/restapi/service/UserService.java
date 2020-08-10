@@ -36,7 +36,10 @@ public class UserService {
 
     public User createUser(@RequestBody User user) {
 
+        userRepository.save(user);
+
         String userId = iamService.createUser(user);
+
         user.setIamID(userId);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));

@@ -46,9 +46,16 @@ public class IAMService implements IdentityAndAccessManagement<User, UserResourc
         kcUser.setUsername(user.getUserName());
         kcUser.setFirstName(user.getFirstName());
         kcUser.setLastName(user.getLastName());
-        kcUser.setEnabled(Boolean.TRUE);
+
+        keycloak.tokenManager().getAccessToken();
+
+        LOGGER.info("KeyCloak User Attributes:\n " +
+                "Username: {}\nemail: {}\nfirstname:{}\nlastname:{}",
+                kcUser.getUsername(), kcUser.getEmail(), kcUser.getFirstName(), kcUser.getLastName());
 
         RealmResource realm = keycloak.realm(realmScope);
+
+        LOGGER.info("KeyCloak Realm: {}", realm);
 
         Response response = realm.users().create(kcUser);
 
