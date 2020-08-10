@@ -50,7 +50,7 @@ public class UserController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     public User addUser(@RequestBody User user) {
-        return userService.add(user);
+        return userService.createUser(user);
     }
 
 }
