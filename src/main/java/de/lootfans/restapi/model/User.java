@@ -1,16 +1,15 @@
 package de.lootfans.restapi.model;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 
 @Entity
@@ -25,6 +24,13 @@ public class User{
     @Email(message = "Email can not be null")
     @NotNull(message = "Email must be entered")
     private String email;
+
+    @Column(name = "username")
+    @NotNull(message = "username must be entered")
+    private String userName;
+
+    @Column(name = "iam_id")
+    private String iamID;
 
     @Column(name = "first_name")
     @NotNull(message = "Firstname can not be null")
@@ -52,11 +58,27 @@ public class User{
     @Column(name = "last_update")
     private String lastUpdate;
 
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false)
+    private Date createdAt;
+
     public User() {
 
     }
 
-    public User(@NotNull String email, @NotNull String firstName, @NotNull String lastName, @NotNull int age) {
+    public User(@NotNull String userName,
+                @NotNull String email,
+                @NotNull String firstName,
+                @NotNull String lastName,
+                @NotNull int age) {
+
+        this.userName = userName;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -78,7 +100,6 @@ public class User{
     public void setEmail(String email) {
         this.email = email;
     }
-
 
     public String getFirstName() {
         return firstName;
@@ -137,10 +158,45 @@ public class User{
     }
 
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getIamID() {
+        return iamID;
+    }
+
+    public void setIamID(String iamID) {
+        this.iamID = iamID;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public String toString() {
-        return "UserEntity{" +
+        return "User{" +
                 "id=" + id +
+                ", email='" + email + '\'' +
+                ", userName='" + userName + '\'' +
+                ", iamID='" + iamID + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
@@ -148,6 +204,8 @@ public class User{
                 ", password='" + password + '\'' +
                 ", status='" + status + '\'' +
                 ", lastUpdate='" + lastUpdate + '\'' +
+                ", updatedAt=" + updatedAt +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }
