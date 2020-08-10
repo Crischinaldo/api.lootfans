@@ -29,7 +29,7 @@ public class UserController {
         if (!usersResult.isEmpty()) {
             return new ResponseEntity<>(usersResult, HttpStatus.OK);
         }
-        
+
         return new ResponseEntity<>(usersResult, HttpStatus.NO_CONTENT);
     }
 
