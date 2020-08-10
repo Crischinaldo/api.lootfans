@@ -7,10 +7,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import org.springframework.web.util.WebUtils;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +29,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ControllerAdvisor.class);
 
+    /**
+     *
+     * @param ex exception to be handled
+     * @param request corresponding request the exception occured
+     * @return a {@code ResponseEntity} instance
+     */
     @ExceptionHandler({UserNotFoundException.class})
     public ResponseEntity<ApiError> handleControllerException(Exception ex, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
@@ -44,7 +48,8 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
             return handleUserNotFoundException(unfe, headers, status, request);
         }
 
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        ApiError apiError = new ApiError(new Date(), ex.getMessage());
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -58,28 +63,10 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
      */
         protected ResponseEntity<ApiError> handleUserNotFoundException (UserNotFoundException ex, HttpHeaders
         headers, HttpStatus status, WebRequest request){
-            List<String> errors = Collections.singletonList(ex.getMessage());
-            status = HttpStatus.NOT_FOUND;
-            return handleExceptionInternal(ex, new ApiError(errors), headers, status, request);
+
+            ApiError apiError = new ApiError(new Date(), ex.getMessage());
+
+            return new ResponseEntity<>(apiError, status);
         }
 
-    /**
-     *
-     *  A single place to customize the response body of all Exception types.
-     *
-     * @param ex The exception
-     * @param body The body of the response
-     * @param headers The headers of the response
-     * @param status The http status code of the response
-     * @param request The request to respond to
-     * @return a {@code ResponseEntity} instance
-     */
-        protected ResponseEntity<ApiError> handleExceptionInternal (Exception ex, ApiError body, HttpHeaders
-        headers, HttpStatus status, WebRequest request){
-            if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
-                request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
-            }
-
-            return new ResponseEntity<>(body, headers, status);
-        }
 }
