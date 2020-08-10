@@ -3,6 +3,7 @@ package de.lootfans.restapi.service;
 import de.lootfans.restapi.repository.UserRepository;
 import de.lootfans.restapi.specification.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import de.lootfans.restapi.exception.UserNotFoundException;
@@ -16,6 +17,12 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    IAMService iamService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
 
     public List<User> getUsers(){
         return userRepository.findAll();
@@ -27,7 +34,13 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public User add(@RequestBody User user) {
+    public User createUser(@RequestBody User user) {
+
+        String userId = iamService.createUser(user);
+        user.setIamID(userId);
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         return userRepository.save(user);
     }
 }
