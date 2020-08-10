@@ -25,9 +25,10 @@ public class FileController {
             value = "/files"
     )
     public ResponseEntity<File> createFiles(@RequestParam("file") MultipartFile file) throws IOException {
-        fileService.addFile(file);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // TODO: Customize // LIST OF FILES or SINGLE FILE?
+        fileService.addFile(file); // TODO: LIST OF FILES or SINGLE FILE?
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // TODO: Customize
     }
 
 }
