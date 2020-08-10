@@ -11,6 +11,8 @@ services:
       - 8080:8080
     depends_on:
       - postgres
+    networks:
+      - backend
 
   postgres:
     image: postgres
@@ -23,6 +25,8 @@ services:
       POSTGRES_DB: mydb
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
 
   keycloak:
     image: jboss/keycloak:11.0.0
@@ -44,6 +48,8 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
+    networks:
+      - backend
 
   minio:
     image: minio/minio
@@ -56,7 +62,12 @@ services:
       MINIO_ACCESS_KEY: minio_access
       MINIO_SECRET_KEY: minio_secret
     command: server /data
+    networks:
+      - backend
 
 volumes:
   postgres_data:
     driver: local
+
+networks:
+  backend:
