@@ -6,13 +6,20 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.authorization.client.AuthzClient;
+import org.keycloak.authorization.client.resource.AuthorizationResource;
+import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.keycloak.representations.idm.authorization.AuthorizationRequest;
+import org.keycloak.representations.idm.authorization.AuthorizationResponse;
+import org.keycloak.representations.idm.authorization.ResourceRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
@@ -25,6 +32,9 @@ public class IAMService implements IdentityAndAccessManagement<User, UserResourc
 
     @Autowired
     Keycloak keycloak;
+
+    @Autowired
+    AuthzClient authzClient;
 
     @Value("${keycloak.realm}")
     String realmScope;
@@ -46,12 +56,19 @@ public class IAMService implements IdentityAndAccessManagement<User, UserResourc
         kcUser.setUsername(user.getUserName());
         kcUser.setFirstName(user.getFirstName());
         kcUser.setLastName(user.getLastName());
+        kcUser.setEnabled(true);
+        kcUser.setEmailVerified(true);
 
-        keycloak.tokenManager().getAccessToken();
+        AccessTokenResponse token = keycloak.tokenManager().getAccessToken();
 
-        LOGGER.info("KeyCloak User Attributes:\n " +
+
+
+        LOGGER.info("KeyCloak User Attributes:\n" +
                 "Username: {}\nemail: {}\nfirstname:{}\nlastname:{}",
                 kcUser.getUsername(), kcUser.getEmail(), kcUser.getFirstName(), kcUser.getLastName());
+
+        LOGGER.info("KeyCloak Token: {}", token.getToken());
+
 
         RealmResource realm = keycloak.realm(realmScope);
 
@@ -66,6 +83,8 @@ public class IAMService implements IdentityAndAccessManagement<User, UserResourc
                 .toRepresentation();
 
         String userId = realm.users().search(user.getUserName()).get(0).getId();
+
+        LOGGER.info("Assign User {} to user role", userId);
 
         // assign userrole "user" to new User
         this.getUserById(userId).roles().realmLevel().add(Collections.singletonList(userRole));
@@ -110,6 +129,24 @@ public class IAMService implements IdentityAndAccessManagement<User, UserResourc
         passwordCred.setValue(password);
 
         users.get(user.getIamID()).resetPassword(passwordCred);
+
+    }
+
+    @Override
+    public String signInUser(String userName, String password) {
+
+        LOGGER.info("sign in User {} with password {}", userName, password);
+
+        // create an authorization request
+        AuthorizationRequest request = new AuthorizationRequest();
+
+        AuthorizationResponse response = authzClient.authorization(userName, password).authorize(request);
+
+        String token = response.getToken();
+
+        LOGGER.info("Token gained: {}", token);
+
+        return token;
 
     }
 }
