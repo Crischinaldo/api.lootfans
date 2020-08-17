@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 @Service
 public class ArchiveService {
@@ -34,7 +35,7 @@ public class ArchiveService {
      * @param file A multipart file
      * @throws IOException
      */
-    public void uploadFileStream(MultipartFile file) throws IOException {
+    public void uploadFileStream(MultipartFile file, Map<String, String> user) throws IOException {
 
         InputStream inputStream = file.getInputStream();
 
@@ -47,6 +48,7 @@ public class ArchiveService {
                     .object(file.getOriginalFilename())
                     .stream(inputStream, file.getSize(), -1)
                     .contentType(file.getContentType())
+                    .userMetadata(user)
                     .build());
 
             //TODO: Set User Meta data OR Set file ref into user

@@ -17,8 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import de.lootfans.restapi.model.File;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class FileService {
@@ -50,11 +49,12 @@ public class FileService {
 
         Map<String, Claim> claims = jwtTokenUtil.decodeJWT(token);
 
-        LOGGER.info("username of token bearer: {}", claims.get("preferred_username").asString());
+        String userName = claims.get("preferred_username").asString();
 
+        LOGGER.info("username of token bearer: {}", userName);
 
         try {
-            archiveService.uploadFileStream(file);
+            archiveService.uploadFileStream(file, Collections.singletonMap("username", userName));
         } catch (IOException e) {
             e.printStackTrace();
         }
