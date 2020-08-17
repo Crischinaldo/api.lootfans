@@ -1,0 +1,12 @@
+{
+  "realm": "lootfans",
+  "auth-server-url": "http://keycloak:8080/auth",
+  "ssl-required": "external",
+  "resource": "lootfans-cli",
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "a6eaa139-8838-456e-9250-b2e524884774"
+  },
+  "use-resource-role-mappings": true,
+  "confidential-port": 0
+}

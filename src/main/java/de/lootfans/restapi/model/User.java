@@ -13,8 +13,8 @@ import java.util.Date;
 
 
 @Entity
-@Table(name="users")
-public class User{
+@Table(name="userdetails")
+public class UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -68,11 +68,11 @@ public class User{
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
 
-    public User() {
+    public UserDetails() {
 
     }
 
-    public User(@NotNull String userName,
+    public UserDetails(@NotNull String userName,
                 @NotNull String email,
                 @NotNull String firstName,
                 @NotNull String lastName,
@@ -93,7 +93,7 @@ public class User{
         this.id = id;
     }
 
-    
+
 
     public String getEmail() {
         return email;
