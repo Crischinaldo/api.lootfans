@@ -10,6 +10,7 @@ import de.lootfans.restapi.exception.UserNotFoundException;
 import de.lootfans.restapi.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -34,16 +35,37 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
+    public User getUserByUsername(String userName) throws UserNotFoundException {
+        return userRepository.findOne(UserSpecifications.getUserByUserName(userName))
+                .orElseThrow(() -> new UserNotFoundException(userName));
+    }
+
     public User createUser(@RequestBody User user) {
 
-        userRepository.save(user);
+        Optional<User> userExists = userRepository.findOne(UserSpecifications.userExists(user.getUserName(), user.getEmail()));
 
-        String userId = iamService.createUser(user);
+        if (!userExists.isPresent()) {
 
-        user.setIamID(userId);
+            userRepository.save(user);
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+            String userId = iamService.createUser(user);
 
-        return userRepository.save(user);
+            user.setIamID(userId);
+
+            // user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+            user.setPassword(user.getPassword());
+
+            return userRepository.save(user);
+        }
+
+        return null;
+
+    }
+
+    public String signInUser(String userName, String password) {
+
+
+        return iamService.signInUser(userName, password);
     }
 }
