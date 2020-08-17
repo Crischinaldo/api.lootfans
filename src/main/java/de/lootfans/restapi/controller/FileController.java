@@ -12,7 +12,6 @@ import de.lootfans.restapi.model.File;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1")
 public class FileController {
 
     @Autowired
