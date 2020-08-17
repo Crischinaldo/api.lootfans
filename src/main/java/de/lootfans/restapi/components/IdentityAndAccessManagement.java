@@ -9,4 +9,6 @@ public interface IdentityAndAccessManagement<T, G> {
     public G getUserById(String userId);
 
     public void setPassword(T user, String password);
+
+    public String signInUser(String username, String Password);
 }
