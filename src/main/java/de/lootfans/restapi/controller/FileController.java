@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import de.lootfans.restapi.model.File;
 
+import javax.annotation.security.RolesAllowed;
 import java.io.IOException;
 
 @RestController
@@ -17,17 +18,19 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
+    @RolesAllowed("user")
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             value = "/files"
     )
-    public ResponseEntity<File> createFiles(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<File> createFiles(@RequestHeader(value="Authorization") String bearerToken,
+                                            @RequestParam("file") MultipartFile file) throws IOException {
 
-        fileService.addFile(file); // TODO: LIST OF FILES or SINGLE FILE?
+        fileService.addFile(bearerToken, file); // TODO: LIST OF FILES or SINGLE FILE?
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // TODO: Customize
+        return new ResponseEntity<>(HttpStatus.CREATED); // TODO: Customize
     }
 
 }
