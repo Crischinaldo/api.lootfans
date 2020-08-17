@@ -34,4 +34,28 @@ public class UserSpecifications {
         };
     }
 
+    public static Specification<User> getUserByUserName(String userName) {
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root,
+                                         CriteriaQuery<?> query,
+                                         CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get(User_.userName), userName);
+            }
+        };
+    }
+
+    public static Specification<User> userExists(String userName, String email) {
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root,
+                                         CriteriaQuery<?> query,
+                                         CriteriaBuilder criteriaBuilder) {
+
+                return criteriaBuilder.or(criteriaBuilder.like(root.get(User_.userName), userName),
+                        criteriaBuilder.like(root.get(User_.email), email));
+            }
+        };
+    }
+
 }
