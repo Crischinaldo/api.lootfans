@@ -13,8 +13,8 @@ import java.util.Date;
 
 
 @Entity
-@Table(name="userdetails")
-public class UserDetails{
+@Table(name="users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -58,6 +58,7 @@ public class UserDetails{
     @Column(name = "last_update")
     private String lastUpdate;
 
+
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
@@ -68,11 +69,16 @@ public class UserDetails{
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
 
-    public UserDetails() {
+    @OneToOne(mappedBy = "user")
+    private File file;
+
+
+
+    public User() {
 
     }
 
-    public UserDetails(@NotNull String userName,
+    public User(@NotNull String userName,
                 @NotNull String email,
                 @NotNull String firstName,
                 @NotNull String lastName,
@@ -190,6 +196,14 @@ public class UserDetails{
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 
     @Override

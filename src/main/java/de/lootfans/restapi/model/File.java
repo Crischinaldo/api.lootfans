@@ -23,6 +23,10 @@ public class File {
     @JoinColumn(name = "filemetadata_id", referencedColumnName = "id")
     private FileMetaData fileMetaData;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
     public File() {}
 
     public Long getId() {
@@ -47,5 +51,13 @@ public class File {
 
     public void setFileMetaData(FileMetaData fileMetaData) {
         this.fileMetaData = fileMetaData;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
