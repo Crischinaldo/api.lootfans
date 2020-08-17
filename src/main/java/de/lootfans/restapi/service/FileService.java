@@ -1,8 +1,15 @@
 package de.lootfans.restapi.service;
 
+import com.auth0.jwt.interfaces.Claim;
+import de.lootfans.restapi.components.JwtTokenUtil;
 import de.lootfans.restapi.model.FileMetaData;
 import de.lootfans.restapi.repository.FileMetaDataRepository;
 import de.lootfans.restapi.repository.FileRepository;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.authorization.client.AuthzClient;
+import org.keycloak.representations.AccessTokenResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +18,7 @@ import de.lootfans.restapi.model.File;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FileService {
@@ -24,12 +32,26 @@ public class FileService {
     @Autowired
     ArchiveService archiveService;
 
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IAMService.class);
+
 
     public List<File> getFiles(){
         return fileRepository.findAll();
     }
 
-    public File addFile(@RequestBody MultipartFile file) {
+    public File addFile(String bearerToken, @RequestBody MultipartFile file) {
+
+        String token = bearerToken.split(" ")[1];
+
+        LOGGER.info("Token: {}", token);
+
+        Map<String, Claim> claims = jwtTokenUtil.decodeJWT(token);
+
+        LOGGER.info("username of token bearer: {}", claims.get("preferred_username").asString());
+
 
         try {
             archiveService.uploadFileStream(file);
